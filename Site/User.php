@@ -3,7 +3,7 @@
 class User 
 {
     private $firstname;
-   public function getFirstName() {
+    public function getFirstName() {
          return $this->firstname;
     }
     public function setFirstName($firstname) {
@@ -65,6 +65,11 @@ class User
        public function setAdmin($admin) {
            $this->admin = $admin;
        }
+
+        public function toJSON(){
+            // Retourne l'objet au format JSON
+            return json_encode(get_object_vars($this));
+        }
 }
 
 ?>
