@@ -13,10 +13,10 @@ namespace Models
         [Key]
         public string Id { get; set; }
 
-        [Column("first_name")]
+        [Column("firstName")]
         public string FirstName { get; set; }
 
-        [Column("last_name")]
+        [Column("lastName")]
         public string LastName { get; set; }
 
         [Column("email")]
@@ -28,14 +28,14 @@ namespace Models
         [Column("phone")]
         public string Phone { get; set; }
 
-        [Column("birth_date")]
+        [Column("birthDate")]
         public DateTime BirthDate { get; set; }
 
         [Column("nationality")]
         public string Nationality { get; set; }
 
         [Column("admin")]
-        public bool Admin { get; set; }
+        public bool Admin { get; set; } = false;
 
     }
 }

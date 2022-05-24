@@ -37,9 +37,9 @@ namespace Api.Controllers
 
                 DynamicParameters param = new();
                 param.Add(nameof(Id), Id);
-                var user = Connection.QuerySingle<Apartment>("user_get", param, commandType: CommandType.StoredProcedure);
-                var userStr = JsonSerializer.Serialize(user);
-                return Content($"{userStr}");
+                var apartment = Connection.QuerySingle<Apartment>("apartment_get", param, commandType: CommandType.StoredProcedure);
+                var apartmentStr = JsonSerializer.Serialize(apartment);
+                return Content($"{apartmentStr}");
             }
             catch (Exception e)
             {
@@ -52,9 +52,9 @@ namespace Api.Controllers
         {
             try
             {
-                var user = Connection.Query<User>("user_get_all", commandType: CommandType.StoredProcedure);
-                var userStr = JsonSerializer.Serialize(user);
-                return Content($"{userStr}");
+                var apartment = Connection.Query<Apartment>("apartment_get_all", commandType: CommandType.StoredProcedure);
+                var apartmentStr = JsonSerializer.Serialize(apartment);
+                return Content($"{apartmentStr}");
             }
             catch (Exception e)
             {
@@ -68,21 +68,21 @@ namespace Api.Controllers
             try
             {
                 StreamReader reader = new(Request.Body);
-                var str = await reader.ReadToEndAsync();
-                if (string.IsNullOrEmpty(str))
+                var apartmentStr = await reader.ReadToEndAsync();
+                if (string.IsNullOrEmpty(apartmentStr))
                 {
                     throw new Exception("La requete est vide");
                 }
-                var user = JsonSerializer.Deserialize<User>(str);
-                if (user == null)
+                var apartment = JsonSerializer.Deserialize<Apartment>(apartmentStr);
+                if (apartment == null)
                 {
-                    throw new Exception("Le body");
+                    throw new Exception("Les données sont vides ou malformé");
                 }
 
-                user.Id = Guid.NewGuid().ToString();
+                apartment.Id = Guid.NewGuid().ToString();
                 DynamicParameters param = new();
-                param.AddDynamicParams(user);
-                Connection.Execute("user_insert", param, commandType: CommandType.StoredProcedure);
+                param.AddDynamicParams(apartment);
+                Connection.Execute("apartment_insert", param, commandType: CommandType.StoredProcedure);
                 return JsonSerializer.Serialize(new { Success = true, Error = "" });
             }
             catch (Exception e)
@@ -92,19 +92,22 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public bool Remove([FromQuery] string Id)
+        public string Remove([FromQuery] string Id)
         {
             try
             {
                 DynamicParameters param = new();
                 param.Add(nameof(Id), Id);
-                var user = Connection.Execute("user_delete", param, commandType: CommandType.StoredProcedure);
-                var userStr = JsonSerializer.Serialize(user);
-                return true;
+                var row = Connection.Execute("apartment_delete", param, commandType: CommandType.StoredProcedure);
+                if (row < 1)
+                {
+                    return JsonSerializer.Serialize(new { Success = false, Error = "Aucun appartement ne correspond à cette id" });
+                }
+                return JsonSerializer.Serialize(new { Success = true });
             }
             catch (Exception e)
             {
-                return false;
+                return JsonSerializer.Serialize(new { Success = false, Error = e.Message });
             }
         }
 
@@ -118,15 +121,15 @@ namespace Api.Controllers
                 {
                     throw new Exception("La requete est vide");
                 }
-                var user = JsonSerializer.Deserialize<User>(str);
-                if (user.Id == null)
+                var apartment = JsonSerializer.Deserialize<Apartment>(str);
+                if (apartment.Id == null)
                 {
                     throw new Exception("L'id est vide");
                 }
 
                 DynamicParameters param = new();
-                param.AddDynamicParams(user);
-                Connection.Execute("user_update", param, commandType: CommandType.StoredProcedure);
+                param.AddDynamicParams(apartment);
+                Connection.Execute("apartment_update", param, commandType: CommandType.StoredProcedure);
                 return JsonSerializer.Serialize(new { Success = true, Error = "" });
             }
             catch (Exception e)

@@ -21,7 +21,7 @@ namespace Models
         [Column("street")]
         public string Street { get; set; }
 
-        [Column("zip_code")]
+        [Column("zipCode")]
         public string ZipCode { get; set; }
 
         [Column("city")]

@@ -11,7 +11,6 @@ namespace Api.Controllers
     [ApiController]
     public class UserController : Controller
     {
-        // Tester le login puis ApartmentController
         private readonly IConfiguration _config;
 
         private readonly string CS;
@@ -84,7 +83,13 @@ namespace Api.Controllers
                 var user = JsonSerializer.Deserialize<User>(str);
                 if (user==null)
                 {
-                    throw new Exception("Le body est vide ou malformé");
+                    throw new Exception("Les données sont vides ou malformé");
+                }
+
+                if (string.IsNullOrWhiteSpace(user.FirstName) || string.IsNullOrWhiteSpace(user.LastName) || string.IsNullOrWhiteSpace(user.Email) ||
+                    string.IsNullOrWhiteSpace(user.Phone) || string.IsNullOrWhiteSpace(user.Password) || string.IsNullOrWhiteSpace(user.Nationality))
+                {
+                    throw new Exception("Tout les champs sont requis");
                 }
 
                 user.Id = Guid.NewGuid().ToString();
@@ -133,19 +138,22 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public bool Remove([FromQuery] string Id)
+        public string Remove([FromQuery] string Id)
         {
             try
             {
                 DynamicParameters param = new();
                 param.Add(nameof(Id), Id);
-                var user = Connection.Execute("user_delete", param, commandType: CommandType.StoredProcedure);
-                var userStr = JsonSerializer.Serialize(user);
-                return true;
+                var row = Connection.Execute("user_delete", param, commandType: CommandType.StoredProcedure);
+                if (row<1)
+                {
+                    return JsonSerializer.Serialize(new { Success = false, Error = "Aucun utilisateur ne correspond à cette id" });
+                }
+                return JsonSerializer.Serialize(new { Success = true });
             }
             catch (Exception e)
             {
-                return false;
+                return JsonSerializer.Serialize(new { Success = false, Error=e.Message });
             }
         }
 
