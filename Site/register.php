@@ -51,8 +51,8 @@ if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) &&
 </head>
 
 <body>
-<div class="login">
-<h1 class="text-center titre_login mt-11">Créer un compte</h1>
+<div class="register">
+<h1 class="text-center titre_register mt-11">Créer un compte</h1>
 <div class="overflow-hidden flex items-center justify-center">
   <div class="bg-white lg:w-5/12 md:6/12 w-10/12 shadow-3xl">
     <form class="p-12" action="/register.php" method="POST">
@@ -83,7 +83,7 @@ if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) &&
         </div>
         <?php }?>
       <div class="flex items-center justify-between flex-row-reverse flex-wrap-reverse">
-      <button type="submit" class="font-medium p-2 md:p-4 button_login uppercase w-full">Connexion</button>
+      <button type="submit" class="font-medium p-2 md:p-4 button_login uppercase w-full">Créer un compte</button>
       <a href="index.php" class="font-medium">Deja un compte ? Cliquez ici</button>
       </div>
     </form>
@@ -103,7 +103,7 @@ body {
 }
 
 
-.button_login {
+.button_register {
     background-color: #272838; 
     color : #F8E2CA;
     width : 50%;
