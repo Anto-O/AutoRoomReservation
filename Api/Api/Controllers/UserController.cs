@@ -128,7 +128,7 @@ namespace Api.Controllers
                 {
                     return JsonSerializer.Serialize(new { Success = true, Content = user });
                 }
-
+                
                 return JsonSerializer.Serialize(new { Success = false, Error = "Le mot de pass ne correspond pas" });
             }
             catch (Exception e)

@@ -1,6 +1,8 @@
 <?php 
 require('config.php');
 require('User.php');
+
+
 if(!empty($_POST)) {
 if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) && 
    (isset($_POST['register_prenom']) && !empty($_POST['register_prenom'])) &&
@@ -30,7 +32,14 @@ if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) &&
     $user->setBirthdate($register_date_de_naissance);
     $user->setNationality($register_nationalite);
 
+    $url = 'http://localhost:5287/User/Register';
 
+    $result = executeRequest($url,$user->toJson(),true);
+    if ($result->Success==true) {
+      header('Location: /index.php');
+    }else{
+      $_SESSION["erreur"] = $result->Error;
+    }
 
    }else {
     $_SESSION['erreur'] = "Veuillez remplir tout les champs du formulaire";
