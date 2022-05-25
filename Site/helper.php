@@ -9,9 +9,6 @@ function executeRequest($url,$data,$post){
     curl_setopt($ch,CURLOPT_URL, $url);
 
     // rajoute l'option POST à la requete
-    curl_setopt($ch,CURLOPT_POST, $post);
-
-    // rajoute l'option POST à la requete
     if (isset($post) && !empty($post)) {
         curl_setopt($ch,CURLOPT_POST, $post);
     }
@@ -20,6 +17,8 @@ function executeRequest($url,$data,$post){
     if (isset($data) && !empty($data)) {
         curl_setopt($ch,CURLOPT_POSTFIELDS, $data);
     }
+    // on sait pas
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
     
     $headers = array();
     if (isset($_SESSION["id"]) && !empty($_SESSION["id"])) {
@@ -27,7 +26,6 @@ function executeRequest($url,$data,$post){
     }
     curl_setopt($ch,CURLOPT_HTTPHEADER, $headers);
     
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
     $res = curl_exec($ch);
 
