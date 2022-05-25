@@ -97,6 +97,30 @@ h1 {
 
 /* style de la recherche */
 
-.appartement {
-    width: 50%;
+.chambre {
+    width: 30%;
+    min-width: 200px;
+    margin-bottom: 15px;
+}
+
+.button_search {
+    background-color: #272838; 
+    color : #F8E2CA;
+}
+
+
+
+.chambre_detail{
+    width: 40%;
+}
+
+@media screen and (max-width: 1024px)
+{
+    .text_detail {
+        font-size: 15px;
+    }
+
+    .chambre_detail{
+        width: 70%;
+    }
 }

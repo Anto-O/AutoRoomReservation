@@ -3,7 +3,7 @@ require('config.php');
 
 if(!empty($_GET)) {
     if((isset($_GET['ville']) && !empty($_GET['ville']))) {
-        $ville = $_GET['ville'];
+        $ville = htmlspecialchars($_GET['ville']);
 
         $url = 'http://localhost:5287/Room/Search?ville=' . $ville;
         $result = executeRequest($url,'',false);
@@ -57,11 +57,17 @@ if(!empty($_GET)) {
     </nav>
     </header>
     <h1 class="text-center mt-24">Reservation</h1>
-    <div class="flex justify-center">
+    <div class="flex justify-evenly bloc_chambre flex-wrap">
         <?php foreach($chambres as $chambre) { ?>
-        <div class="flex appartement flex-col items-center bg-white rounded-lg border shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+        <div class="flex chambre flex-col items-center bg-white rounded-lg border shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="flex flex-col p-4 leading-normal">
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= $chambre->Price; ?></p>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Nom : Appartement' ?></p>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Prix : ' . $chambre->Price . ' €'; ?></p>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Taille : ' . $chambre->Area; ?></p>
+                <form action="/detail.php?" type="GET">
+                    <input type="hidden" name="ville" value="<?= $ville ?>">
+                <button name="Id" value="<?= $chambre->Id;?>" type="submit" class="font-medium p-2 md:p-4 button_search uppercase w-full">Details</button>
+                </form>
             </div>
         </div>
         <?php } ?>
