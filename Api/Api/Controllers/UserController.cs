@@ -110,6 +110,7 @@ namespace Api.Controllers
                 }
 
                 user.Id = Guid.NewGuid().ToString();
+                user.Admin = false;
                 DynamicParameters param = new();
                 param.AddDynamicParams(user);
                 Connection.Execute("user_insert", param, commandType: CommandType.StoredProcedure);
@@ -150,7 +151,7 @@ namespace Api.Controllers
                 
                 var user = Connection.QuerySingle<User>("user_get_by_mail", param, commandType: CommandType.StoredProcedure);
 
-                if (Helper.IsObjectNull(user))
+                if (user==null || Helper.IsObjectNull(user))
                 {
                     throw new Exception("Aucun utilisateur n'est associé a ce mail");
                 }
