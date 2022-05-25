@@ -15,16 +15,17 @@ require('config.php');
 
     <title>Document</title>
 </head>
+<?php if (!empty($_SESSION['id'])) { ?>
 <body>
     <header>
     <nav class="flex items-center justify-between bg-white px-12">
     <img class="image_navbar" src="/images/lit.png" alt="lit">
     <ul class="flex">
         <li class="mr-6">
-            <a class="text-lg link_navbar" href="#">Acceuil</a>
+            <a class="text-lg link_navbar" href="acceuil.php">Acceuil</a>
         </li>
         <li class="mr-6">
-            <a class="text-lg link_navbar" href="#">Se deconnecter</a>
+            <a class="text-lg link_navbar" href="deconnexion.php">Se deconnecter</a>
         </li>
     </ul>
     </nav>
@@ -37,6 +38,10 @@ require('config.php');
     </div>
     </div>
 </body>
+<?php }else {
+    $_SESSION['erreur'] = "Veuillez vous connecter avant d'acceder au site internet";
+    header('Location: index.php');
+} ?>
 </html>
 
 <style>   

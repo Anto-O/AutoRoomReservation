@@ -2,7 +2,6 @@
 require('config.php');
 require('User.php');
 
-
 if(!empty($_POST)) {
 if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) && 
    (isset($_POST['register_prenom']) && !empty($_POST['register_prenom'])) &&
@@ -21,24 +20,25 @@ if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) &&
     $register_nationalite = htmlspecialchars($_POST['register_nationalite']);
     if (!filter_var($register_email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['erreur'] = 'Email invalide !';
-    }
-
-    $user = new User;
-    $user->setFirstName($register_nom);
-    $user->setLastName($register_prenom);
-    $user->setEmail($register_email);
-    $user->setPassword($register_password);
-    $user->setPhone($register_telephone);
-    $user->setBirthdate($register_date_de_naissance);
-    $user->setNationality($register_nationalite);
-
-    $url = 'http://localhost:5287/User/Register';
-
-    $result = executeRequest($url,$user->toJson(),true);
-    if ($result->Success==true) {
-      header('Location: /index.php');
-    }else{
-      $_SESSION["erreur"] = $result->Error;
+        
+    }else {
+        $user = new User;
+        $user->setFirstName($register_nom);
+        $user->setLastName($register_prenom);
+        $user->setEmail($register_email);
+        $user->setPassword($register_password);
+        $user->setPhone($register_telephone);
+        $user->setBirthdate($register_date_de_naissance);
+        $user->setNationality($register_nationalite);
+    
+        $url = 'http://localhost:5287/User/Register';
+    
+        $result = executeRequest($url,$user->toJson(),true);
+        if ($result->Success==true) {
+          header('Location: /index.php');
+        }else{
+          $_SESSION["erreur"] = $result->Error;
+        }
     }
 
    }else {
@@ -60,8 +60,8 @@ if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) &&
 </head>
 
 <body>
-<div class="register">
-<h1 class="text-center titre_register mt-11">Créer un compte</h1>
+<div class="login">
+<h1 class="text-center titre_login mt-11">Créer un compte</h1>
 <div class="overflow-hidden flex items-center justify-center">
   <div class="bg-white lg:w-5/12 md:6/12 w-10/12 shadow-3xl">
     <form class="p-12" action="/register.php" method="POST">
@@ -112,7 +112,7 @@ body {
 }
 
 
-.button_register {
+.button_login {
     background-color: #272838; 
     color : #F8E2CA;
     width : 50%;
@@ -134,8 +134,5 @@ h1 {
 
     }
 }
-
-
-
 
 </style>
