@@ -7,7 +7,9 @@ if(!empty($_POST)) {
      (isset($_POST['login_password']) && !empty($_POST['login_password']))){
     $login_email = htmlspecialchars($_POST['login_email']);
     $login_password = sha1($_POST['login_password']);
-
+    if (!filter_var($login_email, FILTER_VALIDATE_EMAIL)) {
+      $_SESSION['erreur'] = 'Email invalide !';
+  }else {
     $url = 'http://localhost:5287/User/Login?Email=' . $login_email .'&Password=' . $login_password;
         $result = executeRequest($url,null,true);
         /*if ($result->Success==true) {
@@ -26,6 +28,7 @@ if(!empty($_POST)) {
         }else {
             $_SESSION['erreur'] = $result->Error;
           }
+        }
   }else {
     $_SESSION['erreur'] = "Veuillez remplir tout les champs du formulaire";
 }
@@ -41,6 +44,7 @@ if(!empty($_POST)) {
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
@@ -48,7 +52,7 @@ if(!empty($_POST)) {
 
 <body>
 <div class="login">
-<h1 class="text-center titre_login">Se connecter</h1>
+<h1 class="text-center login_titre mt-48">Se connecter</h1>
 <div class="overflow-hidden flex items-center justify-center">
   <div class="bg-white lg:w-5/12 md:6/12 w-10/12 shadow-3xl">
     <form class="p-12 md:p-24" action="/" method="POST">
@@ -64,11 +68,7 @@ if(!empty($_POST)) {
         </svg>
         <input type="password" name="login_password" id="password" class="bg-gray-200 pl-12 py-2 md:py-4 focus:outline-none w-full" placeholder="Mot de passe" />
       </div>
-      <?php if(!empty($_SESSION['erreur'])){?> 
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-3">
-            <strong class="font-bold"><?php echo $_SESSION['erreur']; ?></strong>
-        </div>
-        <?php }?>
+      
       <div class="flex items-center justify-between flex-row-reverse flex-wrap-reverse">
       <button type="submit" class="font-medium p-2 md:p-4 button_login uppercase w-full">Connexion</button>
       <a href="register.php" class="font-medium">Pas de compte ? Cliquez ici</button>
@@ -82,40 +82,3 @@ if(!empty($_POST)) {
 </html>
 
 <?php $_SESSION['erreur'] = "";  ?>
-
-<style>
-
-body {
-    background-color: #272838;
-}
-
-
-.button_login {
-    background-color: #272838; 
-    color : #F8E2CA;
-    width : 50%;
-}
-
-h1 {
-    font-weight: bold;
-    color : #F8E2CA;
-    font-size: 60px;
-
-}
-
-.titre_login {
- margin-top: 240px;
-}
-
-
-/* Nouvelles règles si la fenêtre fait au plus 1024px de large */
-@media screen and (max-width: 1024px)
-{
-    .button_login
-    {
-        width : 100%;
-
-    }
-}
-
-</style>
