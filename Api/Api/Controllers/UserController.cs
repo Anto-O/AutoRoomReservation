@@ -148,8 +148,9 @@ namespace Api.Controllers
                 }
                 DynamicParameters param = new();
                 param.Add("Email", tempUser.Email);
-                
-                var user = Connection.QuerySingle<User>("user_get_by_mail", param, commandType: CommandType.StoredProcedure);
+
+                var user = Connection.QuerySingleOrDefault<User>("user_get_by_mail", param, commandType: CommandType.StoredProcedure);
+
 
                 if (user==null || Helper.IsObjectNull(user))
                 {
