@@ -97,6 +97,10 @@ h1 {
 
 /* style de la recherche */
 
-.appartement {
+.chambre {
+    width: 100%;
+}
+
+.chambre_solo {
     width: 50%;
 }

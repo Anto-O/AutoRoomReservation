@@ -12,6 +12,7 @@ if(!empty($_GET)) {
             header('Location: acceuil.php');
         }else {
             $chambres = $result->Content;
+            var_dump($chambres);
         }
     }else {
         $_SESSION['erreur'] =  "Veuillez remplir tout les champs du formulaire";
@@ -57,11 +58,16 @@ if(!empty($_GET)) {
     </nav>
     </header>
     <h1 class="text-center mt-24">Reservation</h1>
-    <div class="flex justify-center">
+    <div class="flex justify-evenly bloc_chambre">
         <?php foreach($chambres as $chambre) { ?>
-        <div class="flex appartement flex-col items-center bg-white rounded-lg border shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+        <div class="flex chambre flex-col items-center bg-white rounded-lg border shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="flex flex-col p-4 leading-normal">
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= $chambre->ApartName; ?></p>
                 <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= $chambre->Price; ?></p>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= $chambre->Price; ?></p>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= $chambre->Price; ?></p>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= $chambre->Price; ?></p>
+
             </div>
         </div>
         <?php } ?>
