@@ -9,11 +9,14 @@ function executeRequest($url,$data,$post){
     curl_setopt($ch,CURLOPT_URL, $url);
 
     // rajoute l'option POST à la requete
-    curl_setopt($ch,CURLOPT_POST, $post);
+    if (isset($post) && !empty($post)) {
+        curl_setopt($ch,CURLOPT_POST, $post);
+    }
 
     // rajoute le contenu de la requete
-    curl_setopt($ch,CURLOPT_POSTFIELDS, $data);
-
+    if (isset($data) && !empty($data)) {
+        curl_setopt($ch,CURLOPT_POSTFIELDS, $data);
+    }
     // on sait pas
     curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
     
@@ -27,7 +30,7 @@ function executeRequest($url,$data,$post){
     if ($res==false) {
 	    return (object)array("Success"=>false, "Error"=>"Erreur lors de l'appel de l'api");
     }
-    
+
     // retourne sous forme d'objet php les valeurs retournées en json
     return json_decode($res);
 }
