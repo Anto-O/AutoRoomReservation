@@ -98,9 +98,29 @@ h1 {
 /* style de la recherche */
 
 .chambre {
-    width: 100%;
+    width: 30%;
+    min-width: 200px;
+    margin-bottom: 15px;
 }
 
-.chambre_solo {
-    width: 50%;
+.button_search {
+    background-color: #272838; 
+    color : #F8E2CA;
+}
+
+
+
+.chambre_detail{
+    width: 40%;
+}
+
+@media screen and (max-width: 1024px)
+{
+    .text_detail {
+        font-size: 15px;
+    }
+
+    .chambre_detail{
+        width: 70%;
+    }
 }

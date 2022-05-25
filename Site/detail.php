@@ -2,24 +2,21 @@
 require('config.php');
 
 if(!empty($_GET)) {
-    if((isset($_GET['ville']) && !empty($_GET['ville']))) {
-        $ville = htmlspecialchars($_GET['ville']);
+    if((isset($_GET['Id']) && !empty($_GET['Id']))) {
+        $id_chambre = $_GET['Id'];
+        $get_ville_chambre = $_GET['ville'];
 
-        $url = 'http://localhost:5287/Room/Search?ville=' . $ville;
+        $url = 'http://localhost:5287/Room/Get?Id=' . $id_chambre;
         $result = executeRequest($url,'',false);
         if ($result->Success != true) {
             $_SESSION['erreur'] =  "Il n'y a aucune chambre pour cette ville";
-            header('Location: acceuil.php');
+            header('Location: search.php?ville=' . $get_ville_chambre);
         }else {
-            $chambres = $result->Content;
+            $chambre_detail = $result->Content;
         }
-    }else {
-        $_SESSION['erreur'] =  "Veuillez remplir tout les champs du formulaire";
-        header('Location: acceuil.php');
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,21 +53,20 @@ if(!empty($_GET)) {
     </ul>
     </nav>
     </header>
-    <h1 class="text-center mt-24">Reservation</h1>
+    <h1 class="text-center mt-24">Detail de la chambre : <?= 'Appartement' ?></h1>
     <div class="flex justify-evenly bloc_chambre flex-wrap">
-        <?php foreach($chambres as $chambre) { ?>
-        <div class="flex chambre flex-col items-center bg-white rounded-lg border shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+        <div class="flex chambre_detail flex-col items-center bg-white rounded-lg border shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="flex flex-col p-4 leading-normal">
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Nom : Appartement' ?></p>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Prix : ' . $chambre->Price . ' €'; ?></p>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Taille : ' . $chambre->Area; ?></p>
-                <form action="/detail.php?" type="GET">
-                    <input type="hidden" name="ville" value="<?= $ville ?>">
-                <button name="Id" value="<?= $chambre->Id;?>" type="submit" class="font-medium p-2 md:p-4 button_search uppercase w-full">Details</button>
-                </form>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Nom : Appartement' ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Prix : ' . $chambre_detail->Price . ' €'; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Taille : ' . $chambre_detail->Area; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Place : ' . $chambre_detail->Place; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Ville : ' . $chambre_detail->City; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Rue : ' . $chambre_detail->Street; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Code Postal : ' . $chambre_detail->ZipCode; ?></p>
+                
             </div>
         </div>
-        <?php } ?>
     </div>
 </body>
 <?php } ?>
