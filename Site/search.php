@@ -9,13 +9,13 @@ if(!empty($_GET)) {
         $result = executeRequest($url,'',false);
         if ($result->Success != true) {
             $_SESSION['erreur'] =  "Il n'y a aucune chambre pour cette ville";
-            header('Location: acceuil.php');
+            header('Location: accueil.php');
         }else {
             $chambres = $result->Content;
         }
     }else {
         $_SESSION['erreur'] =  "Veuillez remplir tout les champs du formulaire";
-        header('Location: acceuil.php');
+        header('Location: accueil.php');
     }
 }
 ?>
@@ -39,7 +39,7 @@ if(!empty($_GET)) {
     <img class="image_navbar" src="/images/lit.png" alt="lit">
     <ul class="flex">
         <li class="mr-6">
-            <a class="text-lg link_navbar" href="acceuil.php">Acceuil</a>
+            <a class="text-lg link_navbar" href="accueil.php">Accueil</a>
         </li>
         <?php
         if (isset($_SESSION["id"]) && $_SESSION["admin"]==true) {

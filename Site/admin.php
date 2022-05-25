@@ -31,7 +31,7 @@ if ($_SESSION["admin"]==false) {
     <img class="image_navbar" src="/images/lit.png" alt="lit">
     <ul class="flex">
         <li class="mr-6">
-            <a class="text-lg link_navbar" href="acceuil.php">Acceuil</a>
+            <a class="text-lg link_navbar" href="accueil.php">Accueil</a>
         </li>
         <?php
         if (isset($_SESSION["id"]) && $_SESSION["admin"]==true) {
@@ -67,6 +67,7 @@ if ($_SESSION["admin"]==false) {
 <?php }else {
     $_SESSION['erreur'] = "Veuillez vous connecter avant d'acceder au site internet";
     header('Location: index.php');
+    die;
 } ?>
 </html>
 

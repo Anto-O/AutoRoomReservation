@@ -23,7 +23,7 @@ require('config.php');
     <img class="image_navbar" src="/images/lit.png" alt="lit">
     <ul class="flex">
         <li class="mr-6">
-            <a class="text-lg link_navbar" href="acceuil.php">Acceuil</a>
+            <a class="text-lg link_navbar" href="accueil.php">Accueil</a>
         </li>
         <?php
         if (isset($_SESSION["id"]) && $_SESSION["admin"]==true) {
@@ -40,7 +40,7 @@ require('config.php');
     </ul>
     </nav>
     </header>
-    <h1 class="text-center mt-24">Acceuil</h1>
+    <h1 class="text-center mt-24">Accueil</h1>
     <div class="flex justify-center items-center mt-11">
         <form action="/search.php?" class="bg-white search p-10 flex justify-center" method="GET">
         <input type="text" name="ville" placeholder="Rechercher" class="bg-gray-200 pl-1 py-2 md:py-4 focus:outline-none" id="search_appartment">
@@ -59,6 +59,7 @@ require('config.php');
 <?php }else {
     $_SESSION['erreur'] = "Veuillez vous connecter avant d'acceder au site internet";
     header('Location: index.php');
+    die;
 } ?>
 </html>
 

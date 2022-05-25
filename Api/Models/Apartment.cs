@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Models
@@ -12,19 +13,19 @@ namespace Models
     {
 
         [Key]
-        [Column("id")]
+        [Column("id"), JsonPropertyName("id")]
         public string Id { get; set; }
 
-        [Column("name")]
+        [Column("name"), JsonPropertyName("name")]
         public string Name { get; set; }
 
-        [Column("street")]
+        [Column("street"), JsonPropertyName("street")]
         public string Street { get; set; }
 
-        [Column("zipCode")]
+        [Column("zipCode"), JsonPropertyName("zipCode")]
         public string ZipCode { get; set; }
 
-        [Column("city")]
+        [Column("city"), JsonPropertyName("city")]
         public string City { get; set; }
 
         [Column("longitude")]

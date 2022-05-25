@@ -12,7 +12,7 @@ namespace Models
     {
 
         [Key]
-        [Column("id")]
+        [Column("Id")]
         public string Id { get; set; }
 
         [Column("number")]
@@ -27,7 +27,7 @@ namespace Models
         [Column("place")]
         public string Place { get; set; }
 
-        [Column("apartmentId")]
+        [Column("id")]
         public string ApartmentId { get; set; }
 
 

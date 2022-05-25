@@ -43,7 +43,7 @@ if ($result->Success==true) {
     <img class="image_navbar" src="/images/lit.png" alt="lit">
     <ul class="flex">
         <li class="mr-6">
-            <a class="text-lg link_navbar" href="acceuil.php">Acceuil</a>
+            <a class="text-lg link_navbar" href="accueil.php">Accueil</a>
         </li>
         <?php
         if (isset($_SESSION["id"]) && $_SESSION["admin"]==true) {
@@ -61,18 +61,18 @@ if ($result->Success==true) {
     </nav>
     </header>
     <h1 class="text-center mt-24">Admin</h1>
-    <a href="" class="font-medium p-2 md:p-4 button_login uppercase text-center cursor-pointer" style="width:100%!important;">Ajouter un appartement</a>
+    <a href="./apart_add.php" class="font-medium p-2 md:p-4 button_login uppercase text-center cursor-pointer" style="width:100%!important;">Ajouter un appartement</a>
     <div class="flex justify-around items-center mt-11 flex-col ">
         <?php foreach ($aparts as $apart) {
         ?>
             <div class="flex flex-col items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                 <div class="flex flex-col justify-between p-4 leading-normal">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Nom : <?=$apart->Name?></h5>
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Adresse : <?=$apart->Street?></h5>
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Ville : <?=$apart->City?>  / Code postal : <?=$apart->ZipCode?> </h5>
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Nom : <?=$apart->name?></h5>
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Adresse : <?=$apart->street?></h5>
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Ville : <?=$apart->city?>  / Code postal : <?=$apart->zipCode?> </h5>
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Chambres : <?= count($apart->Rooms)?> </h5>
-                    <a href="./apart_edit?id=<?=$apart->Id?>">Editer</a>
-                    <a href="./apart_delete?id=<?=$apart->Id?>">Supprimer</a>
+                    <a href="./apart_edit.php?id=<?=$apart->id?>">Editer</a>
+                    <a href="./apart_delete.php?id=<?=$apart->id?>">Supprimer</a>
                 </div>
             </div>
         <?php }?>
@@ -81,6 +81,7 @@ if ($result->Success==true) {
 <?php }else {
     $_SESSION['erreur'] = "Veuillez vous connecter avant d'acceder au site internet";
     header('Location: index.php');
+    die;
 } ?>
 </html>
 

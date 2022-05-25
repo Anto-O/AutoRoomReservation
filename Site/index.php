@@ -30,7 +30,7 @@ if(!empty($_POST)) {
           $_SESSION['nom'] = $result->Content->lastname;
           $_SESSION['prenom'] = $result->Content->firstname;
           $_SESSION['admin'] = $result->Content->admin;
-          header('Location: acceuil.php');
+          header('Location: accueil.php');
         }else {
             $_SESSION['erreur'] = $result->Error;
           }

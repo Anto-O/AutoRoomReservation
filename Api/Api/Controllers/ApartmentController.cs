@@ -106,6 +106,10 @@ namespace Api.Controllers
                     throw new Exception("La requete est vide");
                 }
                 var apartment = JsonSerializer.Deserialize<Apartment>(apartmentStr);
+                
+                apartment.Longitude = "05";
+                apartment.Latitude = "50";
+
                 if (apartment == null)
                 {
                     throw new Exception("Les données sont vides ou malformé");
