@@ -24,6 +24,15 @@ require('config.php');
         <li class="mr-6">
             <a class="text-lg link_navbar" href="acceuil.php">Acceuil</a>
         </li>
+        <?php
+        if (isset($_SESSION["id"]) && $_SESSION["admin"]==true) {
+        ?>
+            <li class="mr-6">
+                <a class="text-lg link_navbar" href="admin.php">Admin</a>
+            </li>
+        <?php 
+        }
+        ?>
         <li class="mr-6">
             <a class="text-lg link_navbar" href="deconnexion.php">Se deconnecter</a>
         </li>

@@ -5,27 +5,33 @@ require('User.php');
 if(!empty($_POST)) {
   if((isset($_POST['login_email']) && !empty($_POST['login_email'])) && 
      (isset($_POST['login_password']) && !empty($_POST['login_password']))){
-    $login_email = htmlspecialchars($_POST['login_email']);
-    $login_password = sha1($_POST['login_password']);
 
-    $url = 'http://localhost:5287/User/Login?Email=' . $login_email .'&Password=' . $login_password;
-        $result = executeRequest($url,null,true);
-        /*if ($result->Success==true) {
-          header('Location: /index.php');
-        }else{
-          $_SESSION["erreur"] = $result->Error;
-        }*/
+      $login_email = htmlspecialchars($_POST['login_email']);
+      $login_password = sha1($_POST['login_password']);
 
-        if($result->Success == true ) {
-          $_SESSION['id'] = $result->Content->Id;
-          $_SESSION['email'] = $result->Content->email;
-          $_SESSION['password'] = $result->Content->password;
-          $_SESSION['nom'] = $result->Content->lastname;
-          $_SESSION['prenom'] = $result->Content->firstname;
-          header('Location: acceuil.php');
-        }else {
-            $_SESSION['erreur'] = $result->Error;
-          }
+      $user = new User;
+      $user->setEmail($login_email);
+      $user->setPassword($login_password);
+
+      $url = 'http://localhost:5287/User/Login';
+      $result = executeRequest($url,$user->toJson(),true);
+      /*if ($result->Success==true) {
+        header('Location: /index.php');
+      }else{
+        $_SESSION["erreur"] = $result->Error;
+      }*/
+
+      if($result->Success == true ) {
+        $_SESSION['id'] = $result->Content->Id;
+        $_SESSION['email'] = $result->Content->email;
+        $_SESSION['password'] = $result->Content->password;
+        $_SESSION['nom'] = $result->Content->lastname;
+        $_SESSION['prenom'] = $result->Content->firstname;
+        $_SESSION['admin'] = $result->Content->admin;
+        header('Location: acceuil.php');
+      }else {
+        $_SESSION['erreur'] = $result->Error;
+      }
   }else {
     $_SESSION['erreur'] = "Veuillez remplir tout les champs du formulaire";
 }
