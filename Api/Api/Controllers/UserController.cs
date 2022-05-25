@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 using Models;
 using System.Text.Json;
 using System.Data;
+using Microsoft.Extensions.Primitives;
 
 namespace Api.Controllers
 {
@@ -29,6 +30,15 @@ namespace Api.Controllers
         {
             try
             {
+                var IsHeaderSet = Request.Headers.TryGetValue("User-Id", out StringValues UserHeader);
+                if (!IsHeaderSet)
+                {
+                    throw new Exception("Il faut être authentifier pour acceder à cette page");
+                }
+                if (!IsAdmin(UserHeader))
+                {
+                    throw new Exception("Il faut être un admin pour acceder à cette page");
+                }
                 if (string.IsNullOrWhiteSpace(Id))
                 {
                     throw new Exception("L'id est null");
@@ -41,27 +51,34 @@ namespace Api.Controllers
                 {
                     throw new Exception("Aucun utilisateur ne correspond à cette id");
                 }
-                var userStr = JsonSerializer.Serialize(user);
-                return JsonSerializer.Serialize(new { Success = true, Content = userStr });
+                return JsonSerializer.Serialize(new { Success = true, Content = user });
             }
             catch (Exception e)
             {
                 return JsonSerializer.Serialize(new{Success=false,Error =$"Une erreur est survenue:{e.Message}"});
             }
         }
-
+        
         [HttpGet]
         public string GetAll()
         {
             try
             {
-                var user = Connection.Query<User>("user_get_all",commandType:CommandType.StoredProcedure);
+                var IsHeaderSet = Request.Headers.TryGetValue("User-Id", out StringValues UserHeader);
+                if (!IsHeaderSet)
+                {
+                    throw new Exception("Il faut être authentifier pour acceder à cette page");
+                }
+                if (!IsAdmin(UserHeader))
+                {
+                    throw new Exception("Il faut être un admin pour acceder à cette page");
+                }
+                var user = Connection.Query<User?>("user_get_all",commandType:CommandType.StoredProcedure);
                 if (!user.Any())
                 {
                     throw new Exception("Aucun utilisateur");
                 }
-                var userStr = JsonSerializer.Serialize(user);
-                return JsonSerializer.Serialize(new { Success = true, Content= userStr });
+                return JsonSerializer.Serialize(new { Success = true, Content= user });
             }
             catch (Exception e)
             {
@@ -105,31 +122,44 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<string> Login([FromQuery] string Email, [FromQuery] string Password)
+        public async Task<string> Login()
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(Email))
+                StreamReader reader = new(Request.Body);
+                var str = await reader.ReadToEndAsync();
+                if (string.IsNullOrEmpty(str))
+                {
+                    throw new Exception("La requete est vide");
+                }
+                var tempUser = JsonSerializer.Deserialize<User>(str);
+                if (tempUser == null)
+                {
+                    throw new Exception("Les données sont vides ou malformé");
+                }
+                if (string.IsNullOrWhiteSpace(tempUser.Email))
                 {
                     throw new Exception("La mail est requis");
                 }
-                if (string.IsNullOrWhiteSpace(Password))
+                if (string.IsNullOrWhiteSpace(tempUser.Password))
                 {
                     throw new Exception("La mot de passe est requis");
                 }
                 DynamicParameters param = new();
-                param.Add("Email",Email);
+                param.Add("Email", tempUser.Email);
+                
                 var user = Connection.QuerySingle<User>("user_get_by_mail", param, commandType: CommandType.StoredProcedure);
+
                 if (Helper.IsObjectNull(user))
                 {
                     throw new Exception("Aucun utilisateur n'est associé a ce mail");
                 }
-                if (user.Password==Password)
+                if (user.Password == tempUser.Password)
                 {
                     return JsonSerializer.Serialize(new { Success = true, Content = user });
                 }
                 
-                return JsonSerializer.Serialize(new { Success = false, Error = "Le mot de pass ne correspond pas" });
+                return JsonSerializer.Serialize(new { Success = false, Error = "Le mot de passe ne correspond pas" });
             }
             catch (Exception e)
             {
@@ -142,6 +172,15 @@ namespace Api.Controllers
         {
             try
             {
+                var IsHeaderSet = Request.Headers.TryGetValue("User-Id", out StringValues UserHeader);
+                if (!IsHeaderSet)
+                {
+                    throw new Exception("Il faut être authentifier pour acceder à cette page");
+                }
+                if (!IsAdmin(UserHeader))
+                {
+                    throw new Exception("Il faut être un admin pour acceder à cette page");
+                }
                 DynamicParameters param = new();
                 param.Add(nameof(Id), Id);
                 var row = Connection.Execute("user_delete", param, commandType: CommandType.StoredProcedure);
@@ -153,7 +192,7 @@ namespace Api.Controllers
             }
             catch (Exception e)
             {
-                return JsonSerializer.Serialize(new { Success = false, Error=e.Message });
+                return JsonSerializer.Serialize(new { Success = false, Error = e.Message });
             }
         }
 
@@ -161,6 +200,15 @@ namespace Api.Controllers
         {
             try
             {
+                var IsHeaderSet = Request.Headers.TryGetValue("User-Id", out StringValues UserHeader);
+                if (!IsHeaderSet)
+                {
+                    throw new Exception("Il faut être authentifier pour acceder à cette page");
+                }
+                if (!IsAdmin(UserHeader))
+                {
+                    throw new Exception("Il faut être un admin pour acceder à cette page");
+                }
                 StreamReader reader = new(Request.Body);
                 var str = await reader.ReadToEndAsync();
                 if (string.IsNullOrEmpty(str))
@@ -175,7 +223,7 @@ namespace Api.Controllers
                 
                 DynamicParameters param = new();
                 param.AddDynamicParams(user);
-                Connection.Execute("user_update", param, commandType: System.Data.CommandType.StoredProcedure);
+                Connection.Execute("user_update", param, commandType: CommandType.StoredProcedure);
                 return JsonSerializer.Serialize(new { Success = true, Error = "" });
             }
             catch (Exception e)
@@ -189,6 +237,15 @@ namespace Api.Controllers
         {
             try
             {
+                var IsHeaderSet = Request.Headers.TryGetValue("User-Id", out StringValues UserHeader);
+                if (!IsHeaderSet)
+                {
+                    throw new Exception("Il faut être authentifier pour acceder à cette page");
+                }
+                if (!IsAdmin(UserHeader))
+                {
+                    throw new Exception("Il faut être un admin pour acceder à cette page");
+                }
                 DynamicParameters param = new();
                 param.Add(nameof(Id), Id);
                 var user = Connection.Execute("user_set_admin", param, commandType: System.Data.CommandType.StoredProcedure);
@@ -205,6 +262,15 @@ namespace Api.Controllers
         {
             try
             {
+                var IsHeaderSet = Request.Headers.TryGetValue("User-Id", out StringValues UserHeader);
+                if (!IsHeaderSet)
+                {
+                    throw new Exception("Il faut être authentifier pour acceder à cette page");
+                }
+                if (!IsAdmin(UserHeader))
+                {
+                    throw new Exception("Il faut être un admin pour acceder à cette page");
+                }
                 DynamicParameters param = new();
                 param.Add(nameof(Id), Id);
                 var user = Connection.Execute("user_set_cutomer", param, commandType: CommandType.StoredProcedure);
@@ -214,6 +280,22 @@ namespace Api.Controllers
             {
                 return false;
             }
+        }
+
+        public bool IsAdmin([FromQuery] string Id)
+        {
+            try
+            {
+                DynamicParameters param = new();
+                param.Add(nameof(Id), Id);
+                var user = Connection.QuerySingle<User>("user_is_admin", param, commandType: CommandType.StoredProcedure);
+                return user.Admin ?? false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
         }
     }
 }

@@ -27,9 +27,23 @@ namespace Models
         [Column("place")]
         public string Place { get; set; }
 
-        [Column("apartment_id")]
+        [Column("apartmentId")]
         public string ApartmentId { get; set; }
-        
+
+
+
+        [Column("name")]
+        public string ApartName { get; set; }
+
+        [Column("street")]
+        public string Street { get; set; }
+
+        [Column("zipCode")]
+        public string ZipCode { get; set; }
+
+        [Column("city")]
+        public string City { get; set; }
+
         public Apartment apartment { get; set; }
     }
 }

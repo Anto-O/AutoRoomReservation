@@ -14,7 +14,7 @@ require('config.php');
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 
-    <title>Document</title>
+    <title>Accueil</title>
 </head>
 <?php if (!empty($_SESSION['id'])) { ?>
 <body>

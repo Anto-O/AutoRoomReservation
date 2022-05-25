@@ -10,7 +10,7 @@ namespace Api.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
-    public class ApartmentController : Controller
+    public class RoomController : Controller
     {
 
         private readonly IConfiguration _config;
@@ -19,7 +19,7 @@ namespace Api.Controllers
 
         private MySqlConnection Connection { get; set; }
 
-        public ApartmentController(IConfiguration config)
+        public RoomController(IConfiguration config)
         {
             _config = config;
             CS = _config.GetConnectionString("DB");
@@ -27,7 +27,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public string Get([FromQuery] string Id)
+        public string Get([FromQuery] string Id) 
         {
             try
             {
@@ -41,23 +41,58 @@ namespace Api.Controllers
                 {
                     throw new Exception("L'id est null");
                 }
+
                 DynamicParameters param = new();
                 param.Add(nameof(Id), Id);
-                var apartment = Connection.QuerySingle<Apartment>("apartment_get", param, commandType: CommandType.StoredProcedure);
-                if (apartment == null)
+                var room = Connection.QuerySingle<Room>("room_get", param, commandType: CommandType.StoredProcedure);
+                if (room == null)
                 {
-                    throw new Exception("Aucun appartement n'est associé à cette id");
+                    throw new Exception("Aucun chambre n'est associé à cette id");
                 }
-                apartment.Rooms = GetRooms(apartment.Id);
-                
-                return JsonSerializer.Serialize(new { Success = true, Content = apartment });
+                //room.apartment = GetApartment(room.ApartmentId);
+
+                return JsonSerializer.Serialize(new { Success = true, Content = room });
             }
             catch (Exception e)
             {
                 return JsonSerializer.Serialize(new { Success = false, Error = e.Message });
             }
         }
-        
+
+        [HttpGet]
+        public string Search([FromQuery] string ville)
+        {
+            try
+            {
+                var IsHeaderSet = Request.Headers.TryGetValue("User-Id", out StringValues UserHeader);
+                if (!IsHeaderSet)
+                {
+                    throw new Exception("Il faut être authentifier pour acceder à cette page");
+                }
+
+                if (string.IsNullOrWhiteSpace(ville))
+                {
+                    throw new Exception("La ville est requise");
+                }
+                DynamicParameters param = new();
+                param.Add("City", ville.ToLower().Trim());
+                var rooms = Connection.Query<Room>("room_search", param, commandType: CommandType.StoredProcedure).ToList();
+                if (!rooms.Any())
+                {
+                    throw new Exception("Aucune chambres dans cette ville");
+                }
+                /*rooms.ForEach(room => {
+                    room.apartment = GetApartment(room.ApartmentId);
+                });*/
+
+                return JsonSerializer.Serialize(new { Success = true, Content = rooms });
+            }
+            catch (Exception e)
+            {
+                return JsonSerializer.Serialize(new { Success = false, Error = e.Message });
+            }
+        }
+
         [HttpGet]
         public string GetAll()
         {
@@ -68,15 +103,17 @@ namespace Api.Controllers
                 {
                     throw new Exception("Il faut être authentifier pour acceder à cette page");
                 }
-                var apartment = Connection.Query<Apartment?>("apartment_get_all", commandType: CommandType.StoredProcedure).ToList();
-                if (!apartment.Any())
+
+                var rooms = Connection.Query<Room?>("room_get_all", commandType: CommandType.StoredProcedure).ToList();
+                if (!rooms.Any())
                 {
-                    throw new Exception("Aucun apartment");
+                    throw new Exception("Aucun chambres");
                 }
-                apartment.ForEach(apart =>{
-                    apart.Rooms = GetRooms(apart.Id);
+                rooms.ForEach(room => {
+                    room.apartment = GetApartment(room.ApartmentId);
                 });
-                return JsonSerializer.Serialize(new { Success = true, Content = apartment });
+                 
+                return JsonSerializer.Serialize(new { Success = true, Content = rooms });
             }
             catch (Exception e)
             {
@@ -100,21 +137,21 @@ namespace Api.Controllers
                 }
 
                 StreamReader reader = new(Request.Body);
-                var apartmentStr = await reader.ReadToEndAsync();
-                if (string.IsNullOrEmpty(apartmentStr))
+                var roomStr = await reader.ReadToEndAsync();
+                if (string.IsNullOrEmpty(roomStr))
                 {
                     throw new Exception("La requete est vide");
                 }
-                var apartment = JsonSerializer.Deserialize<Apartment>(apartmentStr);
-                if (apartment == null)
+                var room = JsonSerializer.Deserialize<Room>(roomStr);
+                if (room == null)
                 {
                     throw new Exception("Les données sont vides ou malformé");
                 }
 
-                apartment.Id = Guid.NewGuid().ToString();
+                room.Id = Guid.NewGuid().ToString();
                 DynamicParameters param = new();
-                param.AddDynamicParams(apartment);
-                Connection.Execute("apartment_insert", param, commandType: CommandType.StoredProcedure);
+                param.AddDynamicParams(room);
+                Connection.Execute("room_insert", param, commandType: CommandType.StoredProcedure);
                 return JsonSerializer.Serialize(new { Success = true, Error = "" });
             }
             catch (Exception e)
@@ -122,7 +159,7 @@ namespace Api.Controllers
                 return JsonSerializer.Serialize(new { Success = false, Error = e.Message });
             }
         }
-        
+
         [HttpGet]
         public string Remove([FromQuery] string Id)
         {
@@ -137,15 +174,15 @@ namespace Api.Controllers
                 {
                     throw new Exception("Il faut être un admin pour acceder à cette page");
                 }
+
                 DynamicParameters param = new();
                 param.Add(nameof(Id), Id);
-                
-                Connection.Execute("room_delete_by_apart", param, commandType: CommandType.StoredProcedure);
-                var row = Connection.Execute("apartment_delete", param, commandType: CommandType.StoredProcedure);
+
+                var row = Connection.Execute("room_delete", param, commandType: CommandType.StoredProcedure);
                 
                 if (row < 1)
                 {
-                    return JsonSerializer.Serialize(new { Success = false, Error = "Aucun appartement ne correspond à cette id" });
+                    return JsonSerializer.Serialize(new { Success = false, Error = "Aucune chambre ne correspond à cette id" });
                 }
                 return JsonSerializer.Serialize(new { Success = true });
             }
@@ -154,7 +191,7 @@ namespace Api.Controllers
                 return JsonSerializer.Serialize(new { Success = false, Error = e.Message });
             }
         }
-
+        
         [HttpPost]
         public async Task<string> Update()
         {
@@ -169,21 +206,22 @@ namespace Api.Controllers
                 {
                     throw new Exception("Il faut être un admin pour acceder à cette page");
                 }
+
                 StreamReader reader = new(Request.Body);
                 var str = await reader.ReadToEndAsync();
                 if (string.IsNullOrEmpty(str))
                 {
                     throw new Exception("La requete est vide");
                 }
-                var apartment = JsonSerializer.Deserialize<Apartment>(str);
-                if (apartment.Id == null)
+                var room = JsonSerializer.Deserialize<Room>(str);
+                if (room.Id == null)
                 {
                     throw new Exception("L'id est vide");
                 }
-
+                
                 DynamicParameters param = new();
-                param.AddDynamicParams(apartment);
-                Connection.Execute("apartment_update", param, commandType: CommandType.StoredProcedure);
+                param.AddDynamicParams(room);
+                Connection.Execute("room_update", param, commandType: CommandType.StoredProcedure);
                 return JsonSerializer.Serialize(new { Success = true, Error = "" });
             }
             catch (Exception e)
@@ -191,20 +229,17 @@ namespace Api.Controllers
                 return JsonSerializer.Serialize(new { Success = false, Error = e.Message });
             }
         }
-    
-        private List<Room> GetRooms(string ApartmentId)
+
+        private Apartment GetApartment(string Id)
         {
-            try
+            DynamicParameters param = new();
+            param.Add(nameof(Id), Id);
+            var apartment = Connection.QuerySingle<Apartment>("apartment_get", param, commandType: CommandType.StoredProcedure);
+            if (apartment == null)
             {
-                DynamicParameters param = new();
-                param.Add(nameof(ApartmentId), ApartmentId);
-                var rooms = Connection.Query<Room>("room_get_by_apart", param, commandType: CommandType.StoredProcedure).ToList();
-                return rooms;
+                throw new Exception("Aucun appartement n'est associé à cette chambre");
             }
-            catch (Exception e)
-            {
-                return new();
-            }
+            return apartment;
         }
 
         public bool IsAdmin([FromQuery] string Id)

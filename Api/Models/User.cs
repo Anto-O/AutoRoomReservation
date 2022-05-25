@@ -29,14 +29,14 @@ namespace Models
         [Column("phone"), JsonPropertyName("phone")]
         public string Phone { get; set; }
 
-        [Column("birthDate"), JsonPropertyName("birthdate")]
-        public DateTime BirthDate { get; set; }
+        [Column("birthDate")]
+        public DateTime BirthDate { get; set; } = DateTime.Now;
 
         [Column("nationality"), JsonPropertyName("nationality")]
         public string Nationality { get; set; }
 
-        [Column("admin")]
-        public bool Admin { get; set; } = false;
+        [Column("admin"), JsonPropertyName("admin")]
+        public bool? Admin { get; set; } = false;
 
     }
 }

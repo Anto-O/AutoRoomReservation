@@ -53,7 +53,7 @@ if(!empty($_POST)) {
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Login</title>
 </head>
 
 <body>
@@ -74,7 +74,11 @@ if(!empty($_POST)) {
         </svg>
         <input type="password" name="login_password" id="password" class="bg-gray-200 pl-12 py-2 md:py-4 focus:outline-none w-full" placeholder="Mot de passe" />
       </div>
-      
+      <?php if(!empty($_SESSION['erreur'])){?> 
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-3">
+            <strong class="font-bold"><?php echo $_SESSION['erreur']; ?></strong>
+        </div>
+        <?php }?>
       <div class="flex items-center justify-between flex-row-reverse flex-wrap-reverse">
       <button type="submit" class="font-medium p-2 md:p-4 button_login uppercase w-full">Connexion</button>
       <a href="register.php" class="font-medium">Pas de compte ? Cliquez ici</button>
