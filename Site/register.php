@@ -40,7 +40,6 @@ if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) &&
           $_SESSION["erreur"] = $result->Error;
         }
     }
-
    }else {
     $_SESSION['erreur'] = "Veuillez remplir tout les champs du formulaire";
 }
@@ -54,6 +53,7 @@ if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) &&
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
@@ -92,7 +92,7 @@ if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) &&
         </div>
         <?php }?>
       <div class="flex items-center justify-between flex-row-reverse flex-wrap-reverse">
-      <button type="submit" class="font-medium p-2 md:p-4 button_login uppercase w-full">Créer un compte</button>
+      <button type="submit" class="font-medium p-2 md:p-4 button_register uppercase w-full">Créer un compte</button>
       <a href="index.php" class="font-medium">Deja un compte ? Cliquez ici</button>
       </div>
     </form>
@@ -104,35 +104,3 @@ if((isset($_POST['register_nom']) && !empty($_POST['register_nom'])) &&
 </html>
 
 <?php $_SESSION['erreur'] = "";  ?>
-
-<style>
-
-body {
-    background-color: #272838;
-}
-
-
-.button_login {
-    background-color: #272838; 
-    color : #F8E2CA;
-    width : 50%;
-}
-
-h1 {
-    font-weight: bold;
-    color : #F8E2CA;
-    font-size: 60px;
-
-}
-
-/* Nouvelles règles si la fenêtre fait au plus 1024px de large */
-@media screen and (max-width: 1024px)
-{
-    .button_login
-    {
-        width : 100%;
-
-    }
-}
-
-</style>
