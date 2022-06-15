@@ -18,10 +18,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `autoroom`
+-- Base de données : `autoroom_test`
 --
-CREATE DATABASE IF NOT EXISTS `autoroom` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `autoroom`;
+CREATE DATABASE IF NOT EXISTS `autoroom_test` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `autoroom_test`;
 
 DELIMITER $$
 --
@@ -112,14 +112,6 @@ CREATE TABLE `apartment` (
   `latitude` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `apartment`
---
-
-INSERT INTO `apartment` (`id`, `name`, `street`, `zipCode`, `city`, `longitude`, `latitude`) VALUES
-('id', 'Appartement', '50 rue de la République', '69001', 'Lyon', 1, 1),
-('test', 'Appartement spacieux', '12 place Belcoure', '69008', 'Lyon', 0, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -149,15 +141,6 @@ CREATE TABLE `room` (
   `apartmentId` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `room`
---
-
-INSERT INTO `room` (`Id`, `number`, `area`, `price`, `place`, `apartmentId`) VALUES
-('a', 1, 45, 75, 21, 'id'),
-('bba', 1, 58, 180, 3, 'id'),
-('fze', 4, 70, 499, 2, 'test');
-
 -- --------------------------------------------------------
 
 --
@@ -176,15 +159,6 @@ CREATE TABLE `user` (
   `admin` tinyint(1) NOT NULL DEFAULT 0,
   `createDate` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `user`
---
-
-INSERT INTO `user` (`Id`, `firstName`, `lastName`, `email`, `password`, `phone`, `birthDate`, `nationality`, `admin`, `createDate`) VALUES
-('0759b6ec-3dc0-4157-817d-f1c352f3a649', 'User', 'User', 'user@user.user', '12dea96fec20593566ab75692c9949596833adc9', '084469749494', '2022-05-25', 'Francais', 0, '2022-06-13 11:39:41'),
-('19c67079-7975-447a-aaf9-a82b2180542c', 'Test', 'test', 'test@test.test', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', 'test', '1900-01-01', 'test', 1, '2022-06-13 11:39:41'),
-('22feaf74-5d32-4587-ab9e-5dad945722e9', 'Admin', 'Admin', 'admin@admin.admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', '075459784846', '2022-05-25', 'Francais', 1, '2022-06-13 11:39:41');
 
 --
 -- Index pour les tables déchargées
