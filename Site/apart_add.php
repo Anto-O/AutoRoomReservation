@@ -33,7 +33,6 @@ if((isset($_POST['City']) && !empty($_POST['City'])) &&
     $apartment->setStreet($street);
 
     $url = 'http://localhost:5287/Apartment/Add';
-
     $result = executeRequest($url,$apartment->toJson(),true); 
     var_dump($result);
 
