@@ -12,7 +12,7 @@ namespace Models
     public class User
     {
         [Key]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Column("firstName"), JsonPropertyName("firstname")]
         public string FirstName { get; set; }
