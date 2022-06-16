@@ -49,7 +49,7 @@ namespace Api.Controllers
                 {
                     throw new Exception("Aucun chambre n'est associé à cette id");
                 }
-                //room.apartment = GetApartment(room.ApartmentId);
+                room.apartment = GetApartment(room.ApartmentId);
 
                 return JsonSerializer.Serialize(new { Success = true, Content = room });
             }
@@ -150,7 +150,12 @@ namespace Api.Controllers
 
                 room.Id = Guid.NewGuid().ToString();
                 DynamicParameters param = new();
-                param.AddDynamicParams(room);
+                param.Add("Id",room.Id);
+                param.Add("Number", room.Number);
+                param.Add("Area", room.Area);
+                param.Add("Price", room.Price);
+                param.Add("Place", room.Place);
+                param.Add("ApartmentId", room.ApartmentId);
                 Connection.Execute("room_insert", param, commandType: CommandType.StoredProcedure);
                 return JsonSerializer.Serialize(new { Success = true, Error = "" });
             }
@@ -220,7 +225,12 @@ namespace Api.Controllers
                 }
                 
                 DynamicParameters param = new();
-                param.AddDynamicParams(room);
+                param.Add("Id", room.Id);
+                param.Add("Number", room.Number);
+                param.Add("Area", room.Area);
+                param.Add("Price", room.Price);
+                param.Add("Place", room.Place);
+                param.Add("ApartmentId", room.ApartmentId);
                 Connection.Execute("room_update", param, commandType: CommandType.StoredProcedure);
                 return JsonSerializer.Serialize(new { Success = true, Error = "" });
             }
