@@ -6,6 +6,8 @@ if(!empty($_POST)) {
   if((isset($_POST['login_email']) && !empty($_POST['login_email'])) && 
      (isset($_POST['login_password']) && !empty($_POST['login_password']))){
 
+      $_SESSION["old"] = array("login_email"=>$_POST['login_email']);
+      
       $login_email = htmlspecialchars($_POST['login_email']);
       $login_password = sha1($_POST['login_password']);
       if (!filter_var($login_email, FILTER_VALIDATE_EMAIL)) {
@@ -14,26 +16,26 @@ if(!empty($_POST)) {
         $user = new User;
         $user->setEmail($login_email);
         $user->setPassword($login_password);
-
+        $user->setFirstName("");
+        $user->setLastName("");
+        $user->setPhone("");
+        $user->setBirthdate("2018-06-07T00:00");
+        $user->setNationality("");
+        var_dump($user->toJson());
         $url = 'http://localhost:5287/User/Login';
         $result = executeRequest($url,$user->toJson(),true);
-        /*if ($result->Success==true) {
-        header('Location: /index.php');
-        }else{
-        $_SESSION["erreur"] = $result->Error;
-        }*/
 
         if($result->Success == true ) {
-          $_SESSION['id'] = $result->Content->Id;
-          $_SESSION['email'] = $result->Content->email;
-          $_SESSION['password'] = $result->Content->password;
-          $_SESSION['nom'] = $result->Content->lastname;
-          $_SESSION['prenom'] = $result->Content->firstname;
-          $_SESSION['admin'] = $result->Content->admin;
+          $_SESSION['id'] = $result->User->Id;
+          $_SESSION['email'] = $result->User->email;
+          $_SESSION['password'] = $result->User->password;
+          $_SESSION['nom'] = $result->User->lastname;
+          $_SESSION['prenom'] = $result->User->firstname;
+          $_SESSION['admin'] = $result->User->admin;
           header('Location: accueil.php');
         }else {
-            $_SESSION['erreur'] = $result->Error;
-          }
+          $_SESSION['erreur'] = $result->Error;
+        }
       }
   }else {
     $_SESSION['erreur'] = "Veuillez remplir tout les champs du formulaire";
@@ -66,7 +68,7 @@ if(!empty($_POST)) {
         <svg class="absolute ml-3" width="24" viewBox="0 0 24 24">
           <path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z"/>
         </svg>
-        <input type="text" name="login_email" id="username" class="bg-gray-200 pl-12 py-2 md:py-4 focus:outline-none w-full" placeholder="Email"/>
+        <input type="text" name="login_email" value="<?=getOldValue("login_email")?>" id="username" class="bg-gray-200 pl-12 py-2 md:py-4 focus:outline-none w-full" placeholder="Email" />
       </div>
       <div class="flex items-center text-lg mb-6 md:mb-8">
         <svg class="absolute ml-3" viewBox="0 0 24 24" width="24">
@@ -92,3 +94,4 @@ if(!empty($_POST)) {
 </html>
 
 <?php $_SESSION['erreur'] = "";  ?>
+<?php $_SESSION['old'] = "";  ?>

@@ -24,8 +24,9 @@ function executeRequest($url,$data,$post){
     if (isset($_SESSION["id"]) && !empty($_SESSION["id"])) {
         array_push($headers,"User-Id:".$_SESSION["id"]);
     }
-    curl_setopt($ch,CURLOPT_HTTPHEADER, $headers);
     
+    array_push($headers,"Content-Type:application/json");
+    curl_setopt($ch,CURLOPT_HTTPHEADER, $headers);
 
     $res = curl_exec($ch);
 
@@ -34,4 +35,13 @@ function executeRequest($url,$data,$post){
     }
     // retourne sous forme d'objet php les valeurs retournées en json
     return json_decode($res);
+}
+
+function getOldValue($valueName)
+{
+    if (isset($_SESSION["old"]) && isset($_SESSION["old"][$valueName])) {
+        return $_SESSION["old"][$valueName];
+    }
+
+    return "";
 }
