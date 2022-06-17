@@ -81,10 +81,10 @@ namespace Api.Controllers
                 {
                     throw new Exception("Aucune chambres dans cette ville");
                 }
-                /*rooms.ForEach(room => {
+                rooms.ForEach(room => {
                     room.apartment = GetApartment(room.ApartmentId);
-                });*/
-
+                });
+                
                 return JsonSerializer.Serialize(new { Success = true, Content = rooms });
             }
             catch (Exception e)

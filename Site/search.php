@@ -62,12 +62,9 @@ if(!empty($_GET)) {
         <div class="flex chambre flex-col items-center bg-white rounded-lg border shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="flex flex-col p-4 leading-normal">
                 <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Nom : Appartement' ?></p>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Prix : ' . $chambre->Price . ' €'; ?></p>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Taille : ' . $chambre->Area; ?></p>
-                <form action="/detail.php?" type="GET">
-                    <input type="hidden" name="ville" value="<?= $ville ?>">
-                <button name="Id" value="<?= $chambre->Id;?>" type="submit" class="font-medium p-2 md:p-4 button_search uppercase w-full">Details</button>
-                </form>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Prix : ' . $chambre->price . ' €'; ?></p>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><?= 'Taille : ' . $chambre->area; ?></p>
+                <a href="/detail.php?id=<?=$chambre->id?>&ville=<?= $ville ?>" class="font-medium p-2 md:p-4 button_search uppercase w-full">Details </a>
             </div>
         </div>
         <?php } ?>

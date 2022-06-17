@@ -2,10 +2,9 @@
 require('config.php');
 
 if(!empty($_GET)) {
-    if((isset($_GET['Id']) && !empty($_GET['Id']))) {
-        $id_chambre = $_GET['Id'];
+    if((isset($_GET['id']) && !empty($_GET['id']))) {
+        $id_chambre = $_GET['id'];
         $get_ville_chambre = $_GET['ville'];
-
         $url = 'http://localhost:5287/Room/Get?Id=' . $id_chambre;
         $result = executeRequest($url,'',false);
         if ($result->Success != true) {
@@ -58,13 +57,14 @@ if(!empty($_GET)) {
         <div class="flex chambre_detail flex-col items-center bg-white rounded-lg border shadow-md hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
             <div class="flex flex-col p-4 leading-normal">
                 <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Nom : Appartement' ?></p>
-                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Prix : ' . $chambre_detail->Price . ' €'; ?></p>
-                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Taille : ' . $chambre_detail->Area; ?></p>
-                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Place : ' . $chambre_detail->Place; ?></p>
-                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Ville : ' . $chambre_detail->City; ?></p>
-                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Rue : ' . $chambre_detail->Street; ?></p>
-                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Code Postal : ' . $chambre_detail->ZipCode; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Prix : ' . $chambre_detail->price . ' €'; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Taille : ' . $chambre_detail->area; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Place : ' . $chambre_detail->place; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Ville : ' . $chambre_detail->apartment->city; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Rue : ' . $chambre_detail->apartment->street; ?></p>
+                <p class="mb-3 font-normal text_detail text-gray-700 dark:text-gray-400"><?= 'Code Postal : ' . $chambre_detail->apartment->zipCode; ?></p>
                 
+                <a href="./book.php?id=<?=$chambre_detail->id?>" class="font-medium p-2 md:p-4 button_search uppercase w-full">Reserver</a>
             </div>
         </div>
     </div>
